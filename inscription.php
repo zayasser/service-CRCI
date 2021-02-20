@@ -143,8 +143,7 @@ $testChar_Num = '/[^A-Za-zîïâäôöéàçèضصثقفغعهخحجدذطكمن
 						$nom = $row[1];
 						$prenom = $row[2];
 						$login = $row[3];
-						$password = $row[4];
-						
+						$password = $row[4];						
 						$wadouble++;
 					}
 				}

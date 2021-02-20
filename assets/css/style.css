@@ -130,7 +130,7 @@ code {
   padding: 20px 30px;
   position: absolute;
   right: 0;
-  left: 240px;
+  left: 0px;
 }
 
 #wrapper {
@@ -843,7 +843,6 @@ File: Menu
   position: relative;
   width: 240px;
   z-index: 1;
-  background-color: #5e93ed;
 }
 
 .topbar .topbar-left .logo {
@@ -933,7 +932,7 @@ File: Menu
   font-weight: 500;
 }
 
-.notification-list .notify-item .notify-details span {
+.notification-list .notify-item .notify-details p {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1064,7 +1063,6 @@ body.fixed-left .side-menu.left {
 }
 
 .content-page {
-  margin-left: 240px;
   overflow: hidden;
   min-height: 500px;
 }
@@ -3077,9 +3075,8 @@ label{
 }
 
 .footer {
-color: #ffffff;
 text-align: center;
-font-size: 12px;
+
 padding: 15px;
 }
 
@@ -3099,12 +3096,14 @@ color: #000;
 position: relative;
 padding: 5px;
 margin-top: 10px;
+border: 0;
 }
 
 #message p {
 padding: 0px 50px;
 font-size: 12px;
 margin-bottom: 0rem;
+border: 0;
 }
 
 /* Add a green text color and a checkmark when the requirements are right */
@@ -3128,4 +3127,17 @@ position: relative;
 left: -35px;
 content: "✖";
 }
+
+p{
+  border-width:1px;
+ border-style:solid;
+ border-color:black;
+}
 /*# sourceMappingURL=style.css.map */
+
+.error-message{
+  padding: 0 0 0 30px;
+  display: inline;
+  color: #ff5b5b;
+  display: none; 
+}

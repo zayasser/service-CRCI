@@ -42,7 +42,7 @@ function type_Message($TextImprtn,$Text,$EtatMessage){ // EtatMessage = [s,i,w,d
 
 	//$conn = new mysqli($host,$user,$pass,$db);
 	try {
-		$conn = new PDO('mysql:host='.$host.';dbname='.$db.'', $user, $pass);
+		$conn = new PDO('mysql:host='.$host.'; charset=utf8;dbname='.$db.'', $user, $pass);
 		/*foreach($conn->query('SELECT * from login') as $row) {
 			//print_r($row[4]);echo'<br>';
 			if($row[4]==md5('haha')){

@@ -1,69 +1,120 @@
 <?php
 
 	include("conn.php");
+ 
+
+//$conn= mysqli_connect("localhost","root","","stage");
+if(isset($_POST["titre"]) && isset($_POST["urgence"]) && isset($_POST["type"]) && isset($_POST["categorie"]) && isset($_POST["description"]) ) {
+	
+	$titre=$_POST["titre"];
+	$urgence=$_POST["urgence"];
+	$type=$_POST["type"];
+	$categorie=$_POST["categorie"];
+	$description=$_POST["description"];
+	$demandeur= $_COOKIE['id'];
+	$piece = time().'_'.$_FILES['file']['name'];
+	move_uploaded_file($_FILES['file']['tmp_name'],'fichiers/'.$piece);
 
 
+	function B_G_colors($ID_Input,$ColorsBackGround){
 
+	//background-color: lightpink
+	echo'<script>document.getElementById("'.$ID_Input.'").style.backgroundColor = "'.$ColorsBackGround.'";</script>';
+	}
+	
+	if (empty($titre) || empty($urgence)|| empty($type)|| empty($categorie)|| empty($description)){
+		
+		type_Message( '',"veuillez completer l'ensemble des champs",'red');
+		if(empty($titre)){B_G_colors('titre_input','lightpink');}else{B_G_colors('titre_input','white');}
+		if(empty($urgence)){B_G_colors('urg_select','lightpink');}else{B_G_colors('urg_select','white');}
+		if(empty($type)){B_G_colors('type_select','lightpink');}else{B_G_colors('type_select','white');}
+		if(empty($categorie)){B_G_colors('cat_select','lightpink');}else{B_G_colors('cat_select','white');}
+		if(empty($description)){B_G_colors('texte_area','lightpink');}else{B_G_colors('texte_area','white');}
+	}else{
+		B_G_colors('titre_input','white');
+		B_G_colors('urg_select','white');
+		B_G_colors('type_select','white');
+		B_G_colors('cat_select','white');
+		B_G_colors('texte_area','white');
+		
+		$sql="INSERT INTO `demande` (`id`, `titre`, `urgence`, `type`, `categorie`, `description`, `piece`, `statut`, `demandeur`) VALUES (NULL, ?, ?, ?, ?, ?, ?, '1', ?)";
 
-//préparation de la reqête d'insertion (sql)
+		$data = array($titre, $urgence, $type, $categorie, $description, $piece, $demandeur);
+		$query=$conn->prepare($sql);
+		if($query->execute($data)){
+			echo"tseftooo";
+		}else{
+			echo "matseftoch";
+		}
+	}
+}elseif(isset($_POST['etat']) && $_POST['etat'] == "desc"){
 
+	if(isset($_POST["description"]))
+	{
+		$description = $_POST['description'];
+		$id_demande = $_POST['id_demande'];
+		$heure =  date("h:i:s");
+		
+		
 
-//$pdoStat = $conn->prepare('INSERT INTO demande VALUES(NULL, :titre, :urgence, :type, :categorie, :description ,:file');
-$pdoStat = $conn->prepare('INSERT INTO demande VALUES(NULL, :titre, :urgence, :type, :categorie,:description , NULL');
+		if(empty($description)){
+			type_Message( 'Veuillez remplir le champs',"", 'red');		
+		}else{
+									
+			$req = "INSERT INTO `description` (`id`,`description`, `heure`, `id_demande`, `envoyeur`) VALUES (NULL, ?, ?,?,?)";
+			$dbdesc = array($description, $heure,$id_demande, $_COOKIE['id']);
 
+			$res = $conn->prepare($req);
+			if($res->execute($dbdesc)){
+				$req =	"SELECT login.nom, login.prenom FROM description,login WHERE description.id_demande= ? AND description.envoyeur=login.id";
+					$dbdesc = array($id_demande);
+					$reslt = $conn->prepare($req);
+					if($reslt->execute($dbdesc)){
+						 $reslt = $reslt->fetchAll(PDO::FETCH_NUM  );
+				echo"
+					<li class='description'>$heure : ".$reslt[0][0]." " .$reslt[0][1]." <br>=> $description</li>
+				";}
+			}else{
+				
+			}
+		}
+	}       
+    die();                                                                          
+}elseif(isset($_POST['etat']) && $_POST['etat'] == "desc"){
 
-//on lie chaque marque à une valeur
+	if(isset($_POST["description"])){
+		$description = $_POST['description'];
+		$id_demande = $_POST['id_demande'];
+		$heure =  date("h:i:s");
+		
+		
 
-$pdoStat->bindValue(':titre', $_POST['titre'],PDO::PARAM_STR);
-$pdoStat->bindValue(':urgence', $_POST['urgence'],PDO::PARAM_STR);
-$pdoStat->bindValue(':type', $_POST['type'],PDO::PARAM_STR);
-$pdoStat->bindValue(':categorie', $_POST['categorie'],PDO::PARAM_STR);
-$pdoStat->bindValue(':description', $_POST['description'],PDO::PARAM_STR);
-//$pdoStat->bindValue(':file', $_POST['file'],PDO::PARAM_STR);
+		if(empty($description)){
+			type_Message( 'Veuillez remplir le champs',"", 'red');		
+		}else{
+									
+			$req = "INSERT INTO `description` (`id`,`description`, `heure`, `id_demande`, `envoyeur`) VALUES (NULL, ?, ?,?,?)";
+			$dbdesc = array($description, $heure,$id_demande, $_COOKIE['id']);
 
-//$pdoStat->bindValue(':piece', $_FILE['file'],PDO::PARAM_STR);
-//éxécution de la requête préparée
-echo '<pre style="font-family:"Lucida Console", monospace">';
-echo 'description\t:\t'.$_POST['description'];
-echo '\ntitre\t:\t'.$_POST['titre'];
-echo '\nurgence\t:\t'.$_POST['urgence'];
-echo '\ntype\t:\t'.$_POST['type'];
-echo '\ncategorie\t:\t'.$_POST['categorie'];
-echo '</pre>';
-$insertisOk = $pdoStat->execute();
-
-if ( $insertisOk) {
-	$message ='c bon';
+			$res = $conn->prepare($req);
+			if($res->execute($dbdesc)){
+				$req =	"SELECT login.nom, login.prenom FROM description,login WHERE description.id_demande= ? AND description.envoyeur=login.id";
+					$dbdesc = array($id_demande);
+					$reslt = $conn->prepare($req);
+					if($reslt->execute($dbdesc)){
+						 $reslt = $reslt->fetchAll(PDO::FETCH_NUM  );
+				echo"
+					<li class='description'>$heure : ".$reslt[0][0]." " .$reslt[0][1]." <br>=> $description</li>
+				";}
+			}else{
+				
+			}
+		}
+	}       
+    die(); 
+   
 }else{
- $message = 'Echec de l:insertion';
+	 die(); 
 }
-
-
-
-
-
-
-
-/*extract($_POST);
-
-
-
-$host="localhost:3306";
-$user="root";
-$password="";
-$db="demande";
-
-
-$
-
-
-
-$sql="INSERT INTO demande(titre_input, type_select, cat_select, texte_area, piece) VALUES(?,?,?,?,?)";
-$data = array($titre_input, $type_select, $cat_select, $texte_area, $piece );
-$query=$db->prepare($sql);
-$result=$query->execute($data); */
-
-
-
-
+                                                                      
 ?>

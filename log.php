@@ -13,6 +13,7 @@ session_start();
 
 	include("conn.php");
 	
+	
 	if(extract($_POST)==3){
 		if(strlen($login)==0||strlen($password)==0){
 			type_Message('','Votre Nom d\'utiliasteur ou Mot de Passe est incorrect ','red');
@@ -31,6 +32,7 @@ session_start();
 							$prenom = $row[2];
 							$login = $row[3];
 							$password = $row[4];
+							$grade = $row[5];
 							
 							$YesItsOke++;
 						}
@@ -43,6 +45,7 @@ session_start();
 						$_SESSION["login"] = $login;
 						$_SESSION["id"] = $id;
 						$_SESSION["Connecte"] = $id;
+						$_SESSION["grade"] = $grade;
 						
 						if($remembre=='oui'){
 							$time= 60*60*24*365; ///+annee
@@ -52,6 +55,8 @@ session_start();
 						setcookie('connect',md5($login.$nom).md5($password), time()+$time, '/');
 						setcookie('id',$id, time()+$time, '/');
 						setcookie('connect_type','0'.md5(time()-3600), time()+$time, '/');
+						setcookie('grade',$grade, time()+$time, '/');
+
 						//echo'<script>setTimeout(function(){ location.assign("http://localhost/Projetstage/"); }, 1);</script>';
 				echo'<script>
 					document.getElementById("preloader").style.display = "";
@@ -68,10 +73,14 @@ session_start();
 		$_SESSION["login"] = NULL;
 		$_SESSION["id"] = NULL;
 		$_SESSION["Connecte"] = NULL;
+		$_SESSION["grade"] = NULL;
+
 		setcookie('connect',NULL, NULL, '/');
 		setcookie('id',NULL,NULL, '/');
 		setcookie('connect_type',NULL,NULL, '/');
-		type_Message( 'Déconnexion : ',"est succès", 'green'); //Connexion oke 
+		setcookie('grade',NULL,NULL, '/');
+
+		type_Message( 'Déconnexion : ',"est succès", 'green'); //Deconnexion oke 
 		echo'<script>setTimeout(function(){ location.assign("http://localhost/Projetstage/"); }, 360);</script>';
 	}
 	
